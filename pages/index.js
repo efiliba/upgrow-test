@@ -1,34 +1,9 @@
 import React, {useState} from 'react';
 import Head from 'next/head';
 import {Search, Photo} from '../components';
+import {photosByTag} from '../api';
 
-const url = "https://api.unsplash.com/search/photos";
-
-const accessKey = "";
-
-const photosByTag = async tag => {
-  try {
-    const response = await fetch(`${url}?query=${tag}&per_page=3`, {
-      headers: {
-        Authorization: `Client-ID ${accessKey}`
-      }
-    });
-    const data = await response.json();
-    
-    return data.results.map(({id, urls, alt_description, user}) => ({
-      id,
-      src: urls.thumb,
-      alt: alt_description,
-      photographer: user.name,
-      userName: user.username
-    }));
-  } catch {
-    console.error("Unable to retrieve photos");
-    return [];
-  }
-};
-
-const Home = () => {
+const App = () => {
   const [photos, setPhotos] = useState([]);
 
   const handleSearch = async tag => {
@@ -49,58 +24,49 @@ const Home = () => {
       </div>
 
       {photos.length === 0 &&
-        <div>No matched records</div>
+        <div className="photos-not-found">No matching photos found</div>
       }
-      {photos.map(({id, src, alt, photographer, userName}) =>
-        <Photo key={id} src={src} alt={alt} photographer={photographer} userName={userName} />
-      )}
+      <div className="photos-container">
+        {photos.map(({id, src, alt, photographer, userName}) =>
+          <Photo key={id} src={src} alt={alt} photographer={photographer} userName={userName} />
+        )}
+      </div>
 
       <style jsx>{`
+        :global(html) { 
+          font-size: 62.5%;
+        }
+
         :global(body) {
           margin: 0;
           background-color: #333;
           font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+          font-size: 1.6rem;
         }
-        .container {
-          // width: 100%;
-          // text-align: center;
+
+        .photos-not-found {
+          color: red;
+          padding: 1rem;
         }
-        .hero {
-          width: 100%;
-          color: #333;
-        }
-        .title {
-          margin: 0;
-          width: 100%;
-          padding-top: 80px;
-          line-height: 1.15;
-          font-size: 48px;
-        }
-        .title,
-        .description {
-          text-align: center;
-        }
-        .row {
-          max-width: 880px;
-          margin: 80px auto 40px;
-          display: flex;
-          flex-direction: row;
-          justify-content: space-around;
-        }
+
         .card {
-          padding: 18px 18px 24px;
-          width: 220px;
-          text-align: left;
-          text-decoration: none;
-          color: #434343;
+          padding: 1.8rem 1.8rem 2.4rem;
           border: 1px solid #9b9b9b;
         }
+
         .card:hover {
           border-color: #067df7;
+        }
+
+        .photos-container {
+          padding: 2rem;
+          display: grid;
+          grid-gap: 1rem;
+          grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
         }
       `}</style>
     </div>
   );
 };
 
-export default Home;
+export default App;

@@ -46,14 +46,16 @@ export const Search = ({autoFocus, onSearch}) => {
       />
       <button onClick={handleSearch} disabled={searchDisabled}>Search</button>
 
-      <style jsx>{`
+      <style jsx>
+      {`
         legend {
           color: #cdcdcd;
         }
         button {
-          margin-left: 4px;
+          margin-left: 1rem;
         }
-      `}</style>
+      `}
+      </style>
     </fieldset>
   );
 };
