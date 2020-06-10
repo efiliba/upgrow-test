@@ -1,10 +1,38 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Head from 'next/head';
-import {Search} from '../components';
+import {Search, Photo} from '../components';
+
+const url = "https://api.unsplash.com/search/photos";
+
+const accessKey = "";
+
+const photosByTag = async tag => {
+  try {
+    const response = await fetch(`${url}?query=${tag}&per_page=3`, {
+      headers: {
+        Authorization: `Client-ID ${accessKey}`
+      }
+    });
+    const data = await response.json();
+    
+    return data.results.map(({id, urls, alt_description, user}) => ({
+      id,
+      src: urls.thumb,
+      alt: alt_description,
+      photographer: user.name,
+      userName: user.username
+    }));
+  } catch {
+    console.error("Unable to retrieve photos");
+    return [];
+  }
+};
 
 const Home = () => {
-  const handleSearch = () => {
-    console.log(searchValue);
+  const [photos, setPhotos] = useState([]);
+
+  const handleSearch = async tag => {
+    setPhotos(await photosByTag(tag));
   };
 
   return (
@@ -20,14 +48,12 @@ const Home = () => {
         </div>
       </div>
 
-      <div className='hero'>
-        <h1 className='title'>Welcome to Next.js!</h1>
-        <p className='description'>
-          To get started, edit <code>pages/index.js</code> and save to reload.
-        </p>
-
-          
-      </div>
+      {photos.length === 0 &&
+        <div>No matched records</div>
+      }
+      {photos.map(({id, src, alt, photographer, userName}) =>
+        <Photo key={id} src={src} alt={alt} photographer={photographer} userName={userName} />
+      )}
 
       <style jsx>{`
         :global(body) {
