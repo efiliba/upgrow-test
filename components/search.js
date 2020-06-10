@@ -1,9 +1,9 @@
-import React, {useRef, useEffect, useReducer} from 'react';
+import React, {useEffect, useReducer, useRef} from 'react';
 import {reducer, ActionCreators} from './searchReducer';
 
 const MIN_SEARCH_CHARACTERS = 3;
 
-const Search = ({autoFocus, onSearch}) => {
+export const Search = ({autoFocus, onSearch}) => {
   useEffect(() => {
     if (autoFocus) {
       searchInput.current.focus();
@@ -18,11 +18,20 @@ const Search = ({autoFocus, onSearch}) => {
   
   const searchInput = useRef(null);
 
-  const handleSearch = () =>
+  const handleSearch = () => {
+    dispatch(ActionCreators.clearSearchValue());
     onSearch(searchValue);
+  }
 
   const handleSearchChange = e =>
     dispatch(ActionCreators.setSearchValue(e.target.value));
+
+  // Enter key can be used trigger the search
+  const handleSearchKeyDown = e => {
+    if (e.key === "Enter" && !searchDisabled) {
+      handleSearch();
+    }
+  };
 
   return (
     <fieldset>
@@ -32,6 +41,7 @@ const Search = ({autoFocus, onSearch}) => {
         ref={searchInput}
         value={searchValue}
         onChange={handleSearchChange}
+        onKeyDown={handleSearchKeyDown}
         aria-label="Search photos by tag"
       />
       <button onClick={handleSearch} disabled={searchDisabled}>Search</button>
@@ -47,5 +57,3 @@ const Search = ({autoFocus, onSearch}) => {
     </fieldset>
   );
 };
-
-export default Search;
