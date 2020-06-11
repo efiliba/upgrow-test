@@ -1,6 +1,6 @@
 {
   "name": "upgrowth-test",
-  "version": 3,
+  "version": 2,
   "build": [
     {
       "src": "package.json",
