@@ -1,6 +1,6 @@
 {
   "name": "upgrowth-test",
-  "version": 2,
+  "version": 1,
   "build": [
     {
       "src": "package.json",
@@ -11,3 +11,4 @@
     "ACCESS_KEY": "@access-key"
   }
 }
+
