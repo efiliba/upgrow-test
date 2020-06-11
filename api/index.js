@@ -2,7 +2,6 @@ const url = "https://api.unsplash.com/search/photos";
 
 export const photosByTag = async tag => {
   try {
-    debugger
     const response = await fetch(`${url}?query=${tag}`, {
       headers: {
         Authorization: `Client-ID ${process.env.ACCESS_KEY}`
