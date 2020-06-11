@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import Head from 'next/head';
 import {Search, Photo} from '../components';
-import {photosByTag} from '../api';
+import {photosByTag} from '../requests';
 
 const App = () => {
   const [photos, setPhotos] = useState([]);
